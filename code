@@ -5,7 +5,6 @@ import random
 import time 
 
 class CardMemoryGame:
-## set up players and deck
     def __init__(self, num_players):
         self.num_players = num_players
         self.players = {}
@@ -15,11 +14,11 @@ class CardMemoryGame:
         random.shuffle(self.deck)
 
     def play_turn(self, player):
-        # deal 5 cards
+        # Deal 5 cards
         dealt_cards = self.deck[:5]
         self.deck = self.deck[5:]
 
-        # show random cards
+        # Display cards
         for card in dealt_cards:
             print(card)
             time.sleep(1.5)  ###card shown every 1.5 seconds
@@ -29,7 +28,7 @@ class CardMemoryGame:
         print(f"\nYou need to recall {recall_choice}") ## output tells player what to recall
 
         # input tells player to input info
-        recalled_info = input("Enter the recalled information: ")
+        recalled_info = input("Enter the recalled information: ").strip().split() ### stripsplit fixed issue of not counting input with spaces
 
        ### calculate score by comparing input to what was dealt
        # determine what correct info is based on recall choice from above
@@ -39,8 +38,8 @@ class CardMemoryGame:
             correct_info = [card[0] for card in dealt_cards]
         score = 0
             if recalled_info == correct_info:
-              
-                score += 1  
+            
+                score += 1 
 
         self.players[player] += score   ## update score each rounf
 
@@ -65,7 +64,7 @@ class CardMemoryGame:
         winners = [player for player, score in self.players.items() if score == score_max]
         if len(winners) == 1:
             return f"The winner is {winners[0]} with {score_max} points!"
-        else: tie
+        else: ##tie  forgot to add ## 
             return f"We have a tie between {', '.join(winners)} with {score_max} points each!"
 
    

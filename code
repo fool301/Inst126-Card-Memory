@@ -1,0 +1,87 @@
+### Will make the card game as described with the winner being the player with the most points 
+### after a certain amount of turns
+## turns will be inputed by the players that way they can decide how long they want to play
+import random
+import time 
+
+class CardMemoryGame:
+## set up players and deck
+    def __init__(self, num_players):
+        self.num_players = num_players
+        self.players = {}
+        for i in range(num_players):
+            self.players[f"Player {i+1}"] = 0
+        self.deck = [(self.get_rank_name(rank), suit) for rank in range(2, 15) for suit in ['Hearts', 'Diamonds', 'Clubs', 'Spades']]
+        random.shuffle(self.deck)
+
+    def play_turn(self, player):
+        # deal 5 cards
+        dealt_cards = self.deck[:5]
+        self.deck = self.deck[5:]
+
+        # show random cards
+        for card in dealt_cards:
+            print(card)
+            time.sleep(1.5)  ###card shown every 1.5 seconds
+
+        # randomly chose to test for Suits or ranks 
+        recall_choice = random.choice(['Suits', 'Ranks'])
+        print(f"\nYou need to recall {recall_choice}") ## output tells player what to recall
+
+        # input tells player to input info
+        recalled_info = input("Enter the recalled information: ")
+
+       ### calculate score by comparing input to what was dealt
+       # determine what correct info is based on recall choice from above
+        if recall_choice == 'Suits':
+            correct_info = [card[1] for card in dealt_cards]
+        else:
+            correct_info = [card[0] for card in dealt_cards]
+        score = 0
+            if recalled_info == correct_info:
+              
+                score += 1  
+
+        self.players[player] += score   ## update score each rounf
+
+    def get_rank_name(self, rank):
+        if rank == 11:
+            return 'Jack'
+        elif rank == 12:
+            return 'Queen'
+        elif rank == 13:
+            return 'King'
+        elif rank == 14:
+            return 'Ace'
+        else:
+            return str(rank)
+### show scores for each player after turn
+    def display_scores(self):
+        for player, score in self.players.items():
+            print(f"{player}: {score} points")
+### detirmine and say who is the winner
+    def determine_winner(self):
+        score_max = max(self.players.values())
+        winners = [player for player, score in self.players.items() if score == score_max]
+        if len(winners) == 1:
+            return f"The winner is {winners[0]} with {score_max} points!"
+        else: tie
+            return f"We have a tie between {', '.join(winners)} with {score_max} points each!"
+
+   
+   ## how to know when game ends based on turns /players  and print "game over" when it does
+    def play_game(self, num_turns):
+        for _ in range(num_turns):
+            for player in self.players: 
+                print(f"\n{player}'s turn:") 
+                self.play_turn(player)
+                self.display_scores()
+                print("")
+        print("\nGame Over!")
+        print(self.determine_winner())
+
+if __name__ == "__main__":
+    num_players = int(input("Enter the number of players: ")) ## start with choosing how many players
+    num_turns = int(input("Enter the number of turns: "))  ### players choose how many turns
+    game = CardMemoryGame(num_players) 
+    game.play_game(num_turns)  ### run function based on how many players/turns
